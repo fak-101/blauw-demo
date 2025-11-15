@@ -1,0 +1,123 @@
+---
+import PurpleBottle from '../assets/PurpleBottle.png';
+import BlackBottle from '../assets/BlackBottle.png';
+import '../styles/product.css';
+---
+<section class="product">
+  <div class="product-container">
+    <div class="product-layout">
+      <div class="product-left">
+        <div class="product-image-main animate-on-scroll">
+          <div class="image-zoom-container">
+            <img src={BlackBottle.src} alt="Botella Olga Negra" class="product-main-image" id="main-product-image" />
+          </div>
+        </div>
+      </div>
+      
+      <div class="product-right">
+        <h2 class="product-title animate-on-scroll" data-delay="100">BOTELLA OLGA</h2>
+        <div class="product-material animate-on-scroll" data-delay="150">MATERIAL: TRITÁN</div>
+        <p class="product-capacities animate-on-scroll" data-delay="200">CAPACIDADES: 1500, 950, 750, 500 ML.</p>
+        
+        <div class="product-features animate-on-scroll" data-delay="250">
+          <div class="product-feature">
+            <div class="product-feature-content">
+              <strong>Leak proof</strong>
+              <p>Diseñado para evitar derrames</p>
+            </div>
+          </div>
+          <div class="product-feature">
+            <div class="product-feature-content">
+              <strong>BPA FREE</strong>
+              <p>Fabricado sin químicos nocivos, seguro para la salud</p>
+            </div>
+          </div>
+          <div class="product-feature">
+            <div class="product-feature-content">
+              <strong>Eco-Friendly</strong>
+              <p>Elaborado con materiales sostenibles para reducir el impacto ambiental.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="product-colors animate-on-scroll" data-delay="300">
+          <h3 class="colors-title">COLORES DISPONIBLES</h3>
+          <div class="colors-grid">
+            <div class="color-option selected" data-color="black" data-image={BlackBottle.src}>
+              <img src={BlackBottle.src} alt="Botella Negra" class="color-image" />
+              <span class="color-name">Negro</span>
+            </div>
+            <div class="color-option" data-color="purple" data-image={PurpleBottle.src}>
+              <img src={PurpleBottle.src} alt="Botella Violeta" class="color-image" />
+              <span class="color-name">Violeta</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const colorOptions = document.querySelectorAll('.color-option');
+    const mainImage = document.getElementById('main-product-image') as HTMLImageElement;
+    const zoomContainer = document.querySelector('.image-zoom-container') as HTMLElement;
+    let isZoomed = false;
+    
+    colorOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        const imageSrc = option.getAttribute('data-image');
+        const colorName = option.getAttribute('data-color');
+        
+        if (mainImage && imageSrc) {
+          mainImage.src = imageSrc;
+          mainImage.alt = `Botella Olga ${colorName === 'black' ? 'Negra' : 'Violeta'}`;
+        }
+        
+        colorOptions.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        
+        if (isZoomed && zoomContainer) {
+          isZoomed = false;
+          zoomContainer.classList.remove('zoom-active');
+        }
+      });
+    });
+    
+    if (zoomContainer && mainImage) {
+      zoomContainer.addEventListener('mouseenter', () => {
+        zoomContainer.classList.add('zoomed');
+      });
+      
+      zoomContainer.addEventListener('mouseleave', () => {
+        zoomContainer.classList.remove('zoomed');
+        if (isZoomed) {
+          isZoomed = false;
+          zoomContainer.classList.remove('zoom-active');
+        }
+      });
+      
+      zoomContainer.addEventListener('mousemove', (e) => {
+        const rect = zoomContainer.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        mainImage.style.transformOrigin = `${x}% ${y}%`;
+      });
+      
+      zoomContainer.addEventListener('click', (e) => {
+        e.preventDefault();
+        isZoomed = !isZoomed;
+        if (isZoomed) {
+          zoomContainer.classList.add('zoom-active');
+          const rect = zoomContainer.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+          mainImage.style.transformOrigin = `${x}% ${y}%`;
+        } else {
+          zoomContainer.classList.remove('zoom-active');
+        }
+      });
+    }
+  });
+</script>

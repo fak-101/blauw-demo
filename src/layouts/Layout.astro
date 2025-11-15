@@ -1,22 +1,65 @@
+---
+import '../styles/global.css';
+import '../styles/spinner.css';
+---
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>BLAUMARKET - Nuestras Botellas</title>
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const element = entry.target as HTMLElement;
+        const delay = element.getAttribute('data-delay') || '0';
+        const isAnimateOnce = element.classList.contains('animate-once');
+        const hasAnimated = element.hasAttribute('data-animated');
+        
+        if (entry.isIntersecting) {
+          if (isAnimateOnce && hasAnimated) {
+            return;
+          }
+          
+          setTimeout(() => {
+            element.classList.add('animated');
+            if (isAnimateOnce) {
+              element.setAttribute('data-animated', 'true');
+            }
+          }, parseInt(delay));
+        } else {
+          if (!isAnimateOnce) {
+            element.classList.remove('animated');
+          }
+        }
+      });
+    }, observerOptions);
+
+    const elementsToAnimate = document.querySelectorAll('.animate-on-scroll, .animate-from-left, .animate-from-right');
+    elementsToAnimate.forEach(el => observer.observe(el));
+    
+    const landingElements = document.querySelectorAll('.landing .animate-on-scroll');
+    landingElements.forEach(el => {
+      const element = el as HTMLElement;
+      const delay = element.getAttribute('data-delay') || '0';
+      setTimeout(() => {
+        element.classList.add('animated');
+        element.setAttribute('data-animated', 'true');
+      }, parseInt(delay));
+    });
+  });
+</script>

@@ -1,0 +1,31 @@
+---
+---
+<div class="spinner-overlay" id="spinner-overlay">
+  <div class="spinner-container">
+    <div class="spinner"></div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const spinnerOverlay = document.getElementById('spinner-overlay') as HTMLElement;
+    const body = document.body;
+    
+    if (spinnerOverlay) {
+      // Ocultar el contenido principal mientras carga el spinner
+      body.style.overflow = 'hidden';
+      
+      // Ocultar el spinner después de 3 segundos
+      setTimeout(() => {
+        spinnerOverlay.style.opacity = '0';
+        spinnerOverlay.style.transition = 'opacity 0.5s ease-out';
+        
+        setTimeout(() => {
+          spinnerOverlay.style.display = 'none';
+          body.style.overflow = '';
+        }, 500);
+      }, 3000);
+    }
+  });
+</script>
+
